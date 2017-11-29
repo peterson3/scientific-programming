@@ -37,7 +37,7 @@
 	 	y = y0;
 
 
-	 	for (i=0; i<n; i++){
+	 	for (i=0; i<=n; i++){
 	 		xs.push(x);
 	 		ys.push(y);
 	 		k1 = f(x,y);
