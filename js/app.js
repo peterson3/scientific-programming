@@ -10,7 +10,7 @@
 	 	console.table(methodResult[1]);
 	}
 
-	function metodoDeEuler(f, h, n){
+	function metodoDeEuler(f, h, n, x0, y0){
 		
 		console.log("Método de Euler");
 		
@@ -18,15 +18,11 @@
 		let i,j;
 
 		//variáveis
-		let x0, y0, y, xfim, x, k1;
+		let y, xfim, x, k1;
 
 		//dados do resultado a ser plotado
 		let xs=[];
 		let ys=[];
-
-		//Condição Inicial
-	 	x0 = 0.0;
-	 	y0 =1.0;
 
 	 	//Definindo a Próxima Iteração
 	 	x = x0;
@@ -48,7 +44,7 @@
 	 	return result;
 	}
 
-	function metodoDeHeun(f, h, n){
+	function metodoDeHeun(f, h, n, x0, y0){
 
 		console.log("Método de Heun / Euler Melhorado");
 
@@ -56,15 +52,11 @@
 		let i, j;
 
 		//Variáveis Inerentes
-		let x0, y0, y, x, k1, k2;
+		let y, x, k1, k2;
 	   
 	   	//dados do resultado a ser plotado
 		let xs=[];
 		let ys=[];
-
-	   //Condição Inicial
-		x0 = 0;
-		y0 = 1;
 		
 		//Definiando Próximas Iterações
 		x = x0;
@@ -86,7 +78,7 @@
 	 	return result;
 	}
 
-	function metodoDeEulerModificado(f, h, n){
+	function metodoDeEulerModificado(f, h, n, x0, y0){
 
 		console.log("Método Euler Modificado");
 
@@ -94,16 +86,12 @@
 		let i, j;
 
 		//Variáveis Inerentes
-		let x0, y0, y, x;
+		let y, x;
 	   
 	   	//dados do resultado a ser plotado
 		let xs=[];
 		let ys=[];
-
-	   //Condição Inicial
-		x0 = 0;
-		y0 = 1;
-		
+	
 		//Definiando Próximas Iterações
 		x = x0;
 		y = y0;
@@ -123,18 +111,13 @@
 	 	return result;
 	}
 
-	function metodoDeRungeKutta4(f, h, n){
+	function metodoDeRungeKutta4(f, h, n, x0, y0){
 		
-		let x0, y0, x,y;
+		let x,y;
 		let i;
 		let xs = [];
 		let ys = [];
 		
-
-		/* Condicao inicial */
-		x0 = 0.0;
-		y0 = 1.0;
-
 		/* Inicializacao das variaveis */
 		x = x0;
 		y = y0;
@@ -163,8 +146,8 @@
 
 	function funcParser(){
 		// create a parser
-		var parser = math.parser();
-		var FUNCPARSING = $('#funcArea').val();
+		let parser = math.parser();
+		let FUNCPARSING = $('#funcArea').val();
 		parser.eval(FUNCPARSING);
 		return parser.get('f');
 	}
@@ -175,35 +158,39 @@
 		let h; //Tamanho do Salto (H)
 		let n; //Número de Iterações do Método
 		let result; //Objeto com Resultado dos Méotod (Xs e Ys)
+		let xInit;
+		let yInit;
 
+		
 		f = funcParser();
 		h = Number($('#hArea').val());
 		n = Number($('#stepsArea').val());
+		xInit = Number($('#xInit').val());
+		yInit = Number($('#yInit').val());
 
 		try{
 		//Verificar qual método Selecionado
 		switch($('#methodSelector option:selected').text()) {
 		    case "Euler":
-		        result = metodoDeEuler(f,h,n);
+		        result = metodoDeEuler(f,h,n, xInit, yInit);
 		        plotXY(result, "Euler");
 		        break;
 		     case "Euler Modificado":
-		        result = metodoDeEulerModificado(f,h,n);
+		        result = metodoDeEulerModificado(f,h,n, xInit, yInit);
 		        plotXY(result, "Euler Modificado");
 		        break;
 		     case "Heun / Euler Melhorado":
-		        result = metodoDeHeun(f,h,n);
+		        result = metodoDeHeun(f,h,n, xInit, yInit);
 		        plotXY(result, "Heun");
 		        break;
 		     case "Runge-Kutta 4a Ordem":
-		     	result = metodoDeRungeKutta4(f,h,n);
+		     	result = metodoDeRungeKutta4(f,h,n, xInit, yInit);
 		        plotXY(result, "Rk4");
 		        break;
 		    default:
 		        alert("Selecione um Método")
 		}
-		}
-		catch(exception){
+		}catch(exception){
 			alert("Erro: Verifique os Dados");
 			console.log(exception.message);
 		}
