@@ -1,20 +1,22 @@
+	function plotXY(methodResult){
+		PLOTAREA = document.getElementById('plotArea');
+		Plotly.plot( PLOTAREA, [{
+		x: methodResult[0],
+		y: methodResult[1] }], {
+		margin: { t: 0 } } );
 
-	PLOTAREA = document.getElementById('plotArea');
-	var f ; //Função a ser recuperada pelo parser e ser usada pelo método
+	 	console.table(methodResult[0]);
+	 	console.table(methodResult[1]);
+	}
 
-	// Função f(x,y) = y;
-	// function f(x,y){
-	// 	return y;
-	// }
-
-	function metodoDeEuler(){
+	function metodoDeEuler(f, h, n){
 		
 		console.log("Método de Euler");
 		//variáveis de controle
-		let i,j,n;
+		let i,j;
 
 		//variáveis
-		let h, x0, y0, y, xfim, x, k1;
+		let x0, y0, y, xfim, x, k1;
 
 		let xs=[];
 		let ys=[];
@@ -22,15 +24,6 @@
 		//Condição Inicial
 	 	x0 = 0.0;
 	 	y0 =1.0;
-
-	 	//Salto (H)
-	 	h=0.1;
-
-	 	//X final
-	 	xfim =  3.0;
-
-	 	//Calculando a quatidade de passos
-	 	n = (xfim - x0)/h;
 
 	 	//Definindo a Próxima Iteração
 	 	x = x0;
@@ -45,13 +38,11 @@
    			x = x + h;
 	 	}
 
-	 	console.table(xs);
-	 	console.table(ys);
+	 	let result = [];
+	 	result.push(xs);
+	 	result.push(ys);
 
-	 	Plotly.plot( PLOTAREA, [{
-		x: xs,
-		y: ys }], {
-		margin: { t: 0 } } );
+	 	return result;
 	}
 
 	function funcParser(){
@@ -59,8 +50,28 @@
 		var parser = math.parser();
 		var FUNCPARSING = $('#funcArea').val();
 		parser.eval(FUNCPARSING);
-		f = parser.get('f');
-		metodoDeEuler();
+		return parser.get('f');
 	}
 
-	$("#btn").click(funcParser);
+	function executaMetodo(){
+		//Atualizar f,h e n de acordo com os inputs
+		let f; //Função a ser recuperada pelo parser e ser usada pelo método
+		let h; //Tamanho do Salto (H)
+		let n; //Número de Iterações do Método
+		f = funcParser();
+		h = Number($('#hArea').val());
+		n = Number($('#stepsArea').val());
+
+		//Verificar qual método Selecionado
+		switch($('#methodSelector option:selected').text()) {
+		    case "Euler":
+		        let result = metodoDeEuler(f,h,n);
+		        plotXY(result);
+		        break;
+		    default:
+		        alert("Selecione um Método")
+		}
+
+	}
+
+	$("#btn").click(executaMetodo);

@@ -23,12 +23,22 @@
   </head>
   <body>
     <div class="container">
-    <h1>Grupo Água - Programação Científica</h1>
+    <h1>Resolução de EDOs por Métodos Computacionais</h1>
     <input type="text" class="form-control" placeholder="Função" id="funcArea"></input>
-    <button class="form-control" id="btn">Método de Euler</button>
-    <div id="plotArea" style="width:600px;height:250px;"></div>
+    <input type="text" class="form-control" placeholder="H" id="hArea"></input>
+    <input type="text" class="form-control" placeholder="Passos" id="stepsArea"></input>
+    <select class="form-control" id="methodSelector">
+      <option disabled selected="selected">Selecione o Método</option>
+      <option >Euler</option>
+      <option >Heun</option>
+      <option >Runge-Kutta 2a Ordem</option>
+      <option >Runge-Kutta 4a Ordem</option>
+    </select>
+    <button type="button" class="form-control btn btn-primary" id="btn">Calcular</button>
+    <div id="plotArea" class="form-control" style="height:500px;"></div>
   </body>
 </div>
    <script src="js/app.js"></script>
+<img src="img/agua.png" ></img>    <h1>Grupo Água</h1>
 
 </html>
