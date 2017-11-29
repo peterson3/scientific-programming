@@ -50,7 +50,7 @@
 
 	function metodoDeHeun(f, h, n){
 
-		console.log("Método de Heun");
+		console.log("Método de Heun / Euler Melhorado");
 
 		//Variáveis de Controle
 		let i, j;
@@ -63,8 +63,8 @@
 		let ys=[];
 
 	   //Condição Inicial
-		x0 = 0.0;
-		y0 = 1.0;
+		x0 = 0;
+		y0 = 1;
 		
 		//Definiando Próximas Iterações
 		x = x0;
@@ -75,7 +75,44 @@
 	 	   ys.push(y);
 		   k1 = f(x, y);
 		   k2 = f(x + h, y + k1 * h);
-		   y = y + (h/2.0) * (k1 + k2);
+		   y = y + (h/2) * (k1 + k2);
+		   x = x + h;   
+		}
+
+		let result = [];
+	 	result.push(xs);
+	 	result.push(ys);
+
+	 	return result;
+	}
+
+	function metodoDeEulerModificado(f, h, n){
+
+		console.log("Método Euler Modificado");
+
+		//Variáveis de Controle
+		let i, j;
+
+		//Variáveis Inerentes
+		let x0, y0, y, x;
+	   
+	   	//dados do resultado a ser plotado
+		let xs=[];
+		let ys=[];
+
+	   //Condição Inicial
+		x0 = 0;
+		y0 = 1;
+		
+		//Definiando Próximas Iterações
+		x = x0;
+		y = y0;
+
+		for (i = 0; i < n; i++){
+		   xs.push(x);
+	 	   ys.push(y);
+	 	   let aux = f(x + h/2, y + (h/2)*f(x,y));
+		   y = y + (h * aux);
 		   x = x + h;   
 		}
 
@@ -150,7 +187,11 @@
 		        result = metodoDeEuler(f,h,n);
 		        plotXY(result, "Euler");
 		        break;
-		     case "Heun":
+		     case "Euler Modificado":
+		        result = metodoDeEulerModificado(f,h,n);
+		        plotXY(result, "Euler Modificado");
+		        break;
+		     case "Heun / Euler Melhorado":
 		        result = metodoDeHeun(f,h,n);
 		        plotXY(result, "Heun");
 		        break;
@@ -167,7 +208,6 @@
 			console.log(exception.message);
 		}
 	}
-
 
 
 	$("#btn").click(executaMetodo);
