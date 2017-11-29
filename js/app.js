@@ -1,5 +1,5 @@
 	function plotXY(methodResult, nomeMetodo){
-		PLOTAREA = document.getElementById('plotArea');
+		let PLOTAREA = document.getElementById('plotArea');
 		Plotly.plot( PLOTAREA, [{
 		x: methodResult[0],
 		y: methodResult[1],
@@ -8,6 +8,11 @@
 
 	 	console.table(methodResult[0]);
 	 	console.table(methodResult[1]);
+	}
+
+	function limparPlotter(methodResult, nomeMetodo){
+		let PLOTAREA = document.getElementById('plotArea');
+		Plotly.purge(PLOTAREA);
 	}
 
 	function metodoDeEuler(f, h, n, x0, y0){
@@ -198,3 +203,4 @@
 
 
 	$("#btn").click(executaMetodo);
+	$("#btnClear").click(limparPlotter);
