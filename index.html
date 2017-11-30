@@ -23,26 +23,89 @@
   </head>
   <body>
     <div class="container">
-    <h1>Resolução de EDOs por Métodos Computacionais</h1>
-    <input type="text" class="form-control" placeholder="Função" id="funcArea"></input>
-    <input type="text" class="form-control" placeholder="Valor X Inicial" id="xInit"></input>
-    <input type="text" class="form-control" placeholder="Valor Y Inicial" id="yInit"></input>
-    <input type="text" class="form-control" placeholder="H" id="hArea"></input>
-    <input type="text" class="form-control" placeholder="Passos" id="stepsArea"></input>
-    <select class="form-control" id="methodSelector">
-      <option disabled selected="selected">Selecione o Método</option>
-      <option >Euler</option>
-      <option >Euler Modificado</option>
-      <option >Heun / Euler Melhorado</option>
-      <option >Runge-Kutta 4a Ordem</option>
-    </select>
-    <button type="button" class="form-control btn btn-primary" id="btn">Calcular</button>
-    <div id="plotArea" class="form-control" style="height:500px;"></div>
-    <button type="button" class="form-control btn btn-danger" id="btnClear">Limpar</button>
+      <h1 style="text-align:center;">Resolução de EDOs por Métodos Computacionais</h1>
+            <div class="container" style="margin:50px;">
 
-  </body>
-</div>
+      <div class="form-group row">
+        <label class="col-sm-2 col-form-label"><h4 class="text-right">F(x,y) = </h4></label>
+        <div class="col-sm-3">
+        <input type="text" class="form-control" placeholder="Função" id="funcArea"></input>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label class="col-sm-2 col-form-label"><h4 class="text-right">y(</h4></label>
+        <div class="col-sm-1">
+        <input type="text" class="form-control" placeholder="X&#8320;" id="xInit"></input>
+        </div>
+        <label class="col-sm-1 col-form-label"><h4>) =</h4></label>
+
+        <div class="col-sm-1">
+        <input type="text" class="form-control" placeholder="Y&#8320;" id="yInit"></input>
+        </div>
+
+      </div>
+
+      <div class="form-group row">
+        <label class="col-sm-2 col-form-label"><h4 class="text-right">h = </h4></label>
+        <div class="col-sm-1">
+      <input type="text" class="form-control" placeholder="H" id="hArea"></input>
+        </div>
+      </div>
+
+          <div class="form-group row">
+        <label class="col-sm-2 col-form-label"><h4 class="text-right">Nº de Passos</h4></label>
+        <div class="col-sm-2">
+      <input type="text" class="form-control" placeholder="Passos" id="stepsArea"></input>
+        </div>
+      </div>
+
+
+          <div class="form-group row">
+        <label class="col-sm-2 col-form-label"><h4 class="text-right">Método</h4></label>
+        <div class="col-sm-3">
+      <select class="form-control" id="methodSelector">
+        <option disabled selected="selected">Selecione o Método</option>
+        <option >Euler</option>
+        <option >Euler Modificado</option>
+        <option >Heun / Euler Melhorado</option>
+        <option >Runge-Kutta 4a Ordem</option>
+      </select>         </div>
+      </div>
+      
+
+  <div class="form-group row">
+    <div class="col-sm-2">
+      <button type="button" class="form-control btn btn-primary" id="btn">Calcular</button>
+    </div>
+        <div class="col-sm-2">
+      <button type="button" class="form-control btn btn-danger" id="btnClear">Limpar Plotter</button>
+    </div>
+  </div>
+
+    <div class="form-group row">
+        <div id="plotArea" class="form-control col-sm-10" style="height:500px;"></div>
+      </div>
+  </div>
+
+
+    </body>
+  </div>
    <script src="js/app.js"></script>
-<img src="img/agua.png" ></img>    <h1>Grupo Água</h1>
+
+   <div class="container">
+  <div class="row">
+    <div class="col-sm">
+    </div>
+    <div class="col-sm" style="margin:auto;">
+         <figure class="figure">
+  <img src="img/agua.png" class="figure-img img-fluid rounded" alt="A generic square placeholder image with rounded corners in a figure." width="30px" height="30px" style="display:auto; margin: auto;"></img>Grupo Água
+</figure>
+    </div>
+    <div class="col-sm">
+    </div>
+  </div>
+</div>
+
 
 </html>

@@ -153,7 +153,7 @@
 		// create a parser
 		let parser = math.parser();
 		let FUNCPARSING = $('#funcArea').val();
-		parser.eval(FUNCPARSING);
+		parser.eval("f(x,y)=" + FUNCPARSING);
 		return parser.get('f');
 	}
 
