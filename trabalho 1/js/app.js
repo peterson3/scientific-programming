@@ -46,7 +46,7 @@
 	 	result.push(xs);
 	 	result.push(ys);
 
-	 	return result;
+		return result;
 	}
 
 	function metodoDeHeun(f, h, n, x0, y0){
