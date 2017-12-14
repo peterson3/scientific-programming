@@ -15,15 +15,16 @@
 		Plotly.purge(PLOTAREA);
 	}
 
-	function metodoDeEuler(f, h, n, x0, y0){
+	function metodoExplicito(t, t0, tfim, x, x0, xfim, dt, dx, c, csi){
 		
-		console.log("Método de Euler");
+		console.log("Método Explícito");
 
 		//esses valores vão ser setados no html!
 		//ALTERAR DEPOIS
 		dt = 0.001; /* delta tempo */
 		dx = 0.05;   /* delta espaco */
 
+		
 		//intervalo de tempo
 		t0   = 0.0;
 		tfim = 0.5;
@@ -33,8 +34,8 @@
 		xfim = 1.0;
 
 		//numero de intervalor de tempo e espaco
-		nt = ((tfim - t0)/h) + 2;
-		nx = ((xfim - x0)/k) + 2;
+		nt = ((tfim - t0)/dt) + 2;
+		nx = ((xfim - x0)/dx) + 2;
 
 		//constante
 		let c = 1.0;
@@ -45,7 +46,7 @@
 		//condicao inicial 
 		for (j = 0; j < nx; j++)
 		{
-			solucao[0][j] = f(x);
+			metodoExplicito[0][j] = f(x);
 			x += dx;
 		}
 
@@ -53,99 +54,19 @@
 		for (i = 0; i < nt; i++)
 		{
 			t += dt;
-			solucao[i][0]      = gx0(t);
-			solucao[i][nx - 1] = gxfim(t);
+			metodoExplicito[i][0]      = gx0(t);
+			metodoExplicito[i][nx - 1] = gxfim(t);
    
 		for (j = 1; j < nx - 1; j++)
 		{
-			solucao[i + 1][j] = csi * (solucao[i][j + 1] + solucao[i][j - 1]) + (1.0 - 2.0 * csi) * solucao[i][j];
-       }
-   }	   
-
-		
-
-    //
-	// 	for (i=0; i<=n; i++){
-	// 		xs.push(x);
-	// 		ys.push(y);
-	// 		k1 = f(x,y);
-   	//		y = y + h * k1;
-   	//		x = x + h;
-	// 	}
-    //
-	// 	let result = [];
-	// 	result.push(xs);
-	// 	result.push(ys);
-    //
-	//	return result;
-	}
-
-	function metodoDeHeun(f, h, n, x0, y0){
-
-		console.log("Método de Heun / Euler Melhorado");
-
-		//Variáveis de Controle
-		let i, j;
-
-		//Variáveis Inerentes
-		let y, x, k1, k2;
-	   
-	   	//dados do resultado a ser plotado
-		let xs=[];
-		let ys=[];
-		
-		//Definiando Próximas Iterações
-		x = x0;
-		y = y0;
-
-		for (i = 0; i < n; i++){
-		   xs.push(x);
-	 	   ys.push(y);
-		   k1 = f(x, y);
-		   k2 = f(x + h, y + k1 * h);
-		   y = y + (h/2) * (k1 + k2);
-		   x = x + h;   
-		}
-
+			metodoExplicito[i + 1][j] = csi * (metodoExplicito[i][j + 1] + metodoExplicito[i][j - 1]) + (1.0 - 2.0 * csi) * metodoExplicito[i][j];
+        }
+		//falta fazer o retorno e torcer pra dar certo
 		let result = [];
-	 	result.push(xs);
-	 	result.push(ys);
-
-	 	return result;
-	}
-
-	function metodoDeEulerModificado(f, h, n, x0, y0){
-
-		console.log("Método Euler Modificado");
-
-		//Variáveis de Controle
-		let i, j;
-
-		//Variáveis Inerentes
-		let y, x;
-	   
-	   	//dados do resultado a ser plotado
-		let xs=[];
-		let ys=[];
-	
-		//Definiando Próximas Iterações
-		x = x0;
-		y = y0;
-
-		for (i = 0; i < n; i++){
-		   xs.push(x);
-	 	   ys.push(y);
-	 	   let aux = f(x + h/2, y + (h/2)*f(x,y));
-		   y = y + (h * aux);
-		   x = x + h;   
-		}
-
-		let result = [];
-	 	result.push(xs);
-	 	result.push(ys);
-
-	 	return result;
-	}
+	 	result.push(metodoExplicito);
+		return result;
+		}	  
+	}		
 	
 	/*funcao f(x,t)*/
 	function f(x)
@@ -186,22 +107,15 @@
 		try{
 		//Verificar qual método Selecionado
 		switch($('#methodSelector option:selected').text()) {
-		    case "Euler":
-		        result = metodoDeEuler(f,h,n, xInit, yInit);
-		        plotXY(result, "Euler");
+		    case "Explicito":
+		        result = metodoExplicito(t, t0, tfim, x, x0, xfim, dt, dx, c, csi);
+		        plotXY(result, "Explicito");
 		        break;
 		     case "Euler Modificado":
 		        result = metodoDeEulerModificado(f,h,n, xInit, yInit);
 		        plotXY(result, "Euler Modificado");
 		        break;
-		     case "Heun / Euler Melhorado":
-		        result = metodoDeHeun(f,h,n, xInit, yInit);
-		        plotXY(result, "Heun");
-		        break;
-		     case "Runge-Kutta 4a Ordem":
-		     	result = metodoDeRungeKutta4(f,h,n, xInit, yInit);
-		        plotXY(result, "Rk4");
-		        break;
+		     
 		    default:
 		        alert("Selecione um Método")
 		}
