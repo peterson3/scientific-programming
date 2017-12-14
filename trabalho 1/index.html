@@ -96,7 +96,16 @@
 
         <div class="spoiler" style="display: none;">
 
-		    COLOCAR AQUI O QUE VAI SER MOSTRADO
+		    <form name="tabela" method="post" onsubmit="return processar('myTable')">  
+				Nome:  <input type="text" name="user">
+				Senha: <input type="password" name="senha">
+				<input type="submit" value="Confirmar"> 
+				<a href="telaInicial.html" name="voltar">Voltar</a>
+			</form>
+			
+			<table border='1' width='250' height='250'>
+				<tbody id="myTable"></tbody>
+			</table>
 
         </div>
 

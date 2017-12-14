@@ -18,35 +18,66 @@
 	function metodoDeEuler(f, h, n, x0, y0){
 		
 		console.log("Método de Euler");
+
+		//esses valores vão ser setados no html!
+		//ALTERAR DEPOIS
+		dt = 0.001; /* delta tempo */
+		dx = 0.05;   /* delta espaco */
+
+		//intervalo de tempo
+		t0   = 0.0;
+		tfim = 0.5;
+
+		//intervalo do espaco
+		x0   = 0.0;
+		xfim = 1.0;
+
+		//numero de intervalor de tempo e espaco
+		nt = ((tfim - t0)/h) + 2;
+		nx = ((xfim - x0)/k) + 2;
+
+		//constante
+		let c = 1.0;
+
+		//csi
+		let csi = c * dt/(dx*dx);
 		
-		//variáveis de controle
-		let i,j;
+		//condicao inicial 
+		for (j = 0; j < nx; j++)
+		{
+			solucao[0][j] = f(x);
+			x += dx;
+		}
 
-		//variáveis
-		let y, xfim, x, k1;
+		//condicao de contorno
+		for (i = 0; i < nt; i++)
+		{
+			t += dt;
+			solucao[i][0]      = gx0(t);
+			solucao[i][nx - 1] = gxfim(t);
+   
+		for (j = 1; j < nx - 1; j++)
+		{
+			solucao[i + 1][j] = csi * (solucao[i][j + 1] + solucao[i][j - 1]) + (1.0 - 2.0 * csi) * solucao[i][j];
+       }
+   }	   
 
-		//dados do resultado a ser plotado
-		let xs=[];
-		let ys=[];
+		
 
-	 	//Definindo a Próxima Iteração
-	 	x = x0;
-	 	y = y0;
-
-
-	 	for (i=0; i<=n; i++){
-	 		xs.push(x);
-	 		ys.push(y);
-	 		k1 = f(x,y);
-   			y = y + h * k1;
-   			x = x + h;
-	 	}
-
-	 	let result = [];
-	 	result.push(xs);
-	 	result.push(ys);
-
-		return result;
+    //
+	// 	for (i=0; i<=n; i++){
+	// 		xs.push(x);
+	// 		ys.push(y);
+	// 		k1 = f(x,y);
+   	//		y = y + h * k1;
+   	//		x = x + h;
+	// 	}
+    //
+	// 	let result = [];
+	// 	result.push(xs);
+	// 	result.push(ys);
+    //
+	//	return result;
 	}
 
 	function metodoDeHeun(f, h, n, x0, y0){
@@ -115,40 +146,19 @@
 
 	 	return result;
 	}
-
-	function metodoDeRungeKutta4(f, h, n, x0, y0){
-		
-		let x,y;
-		let i;
-		let xs = [];
-		let ys = [];
-		
-		/* Inicializacao das variaveis */
-		x = x0;
-		y = y0;
-
-		for (i = 0; i < n; i++) 
-		    {
-
-		    xs.push(x);
-		    ys.push(y);
-
-		   	k1= f(x, y);
-		   	k2= f(x + h/2, y + (h/2)*k1);
-		   	k3= f(x + h/2, y + (h/2)*k2);
-		   	k4= f(x + h, y + h*k3);
-
-		    y = y + ((h/6)*(k1 + 2*k2 + 2*k3 + k4));
-		    x = x + h;
-		    }
-
-		let result = [];
-	 	result.push(xs);
-	 	result.push(ys);
-
-	 	return result;
-	}
-
+	
+	/*funcao f(x,t)*/
+	function f(x)
+    {
+    if (x >= 0.0) 
+        if (x <= 0.3)  
+			return(50.0);
+        else         
+			return(0.0);
+		else            
+			return(0.0);
+    }
+	
 	function funcParser(){
 		// create a parser
 		let parser = math.parser();
