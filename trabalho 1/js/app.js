@@ -10,6 +10,36 @@
 	 	console.table(methodResult[1]);
 	}
 
+
+	function fillTable(methodResult, nomeMetodo, numPassos){
+		let TABLEAREA = document.getElementById('tableArea');
+			var is = [];
+			for (let i=0; i<numPassos; i++){
+				is.push(i);
+			}
+
+			var values = [is, methodResult[0], methodResult[1]];
+			var data = [{
+			  type: 'table',
+			  header: {	
+			    values: [["i"], ["X"], ["Y"]],
+			    align: "center",
+			    line: {width: 1, color: 'black'},
+			    fill: {color: "grey"},
+			    font: {family: "Arial", size: 12, color: "white"}
+			  },
+			  cells: {
+			    values: values,
+			    align: "center",
+			    line: {color: "black", width: 1},
+			    font: {family: "Arial", size: 11, color: ["black"]}
+			  }
+			}];
+
+			Plotly.plot(TABLEAREA, data);
+
+	}
+
 	function limparPlotter(methodResult, nomeMetodo){
 		let PLOTAREA = document.getElementById('plotArea');
 		Plotly.purge(PLOTAREA);
@@ -20,7 +50,7 @@
 		console.log("Método de Euler");
 		
 		//variáveis de controle
-		let i,j;
+		let i;
 
 		//variáveis
 		let y, xfim, x, k1;
@@ -45,8 +75,7 @@
 	 	let result = [];
 	 	result.push(xs);
 	 	result.push(ys);
-
-		return result;
+	 	return result;
 	}
 
 	function metodoDeHeun(f, h, n, x0, y0){
@@ -88,7 +117,7 @@
 		console.log("Método Euler Modificado");
 
 		//Variáveis de Controle
-		let i, j;
+		let i;
 
 		//Variáveis Inerentes
 		let y, x;
@@ -156,6 +185,11 @@
 		parser.eval("f(x,y)=" + FUNCPARSING);
 		return parser.get('f');
 	}
+	
+	function tableToggle(){
+		// create a parser
+		$("#tableArea").toggle();
+	}
 
 	function executaMetodo(){
 		//Atualizar f,h e n de acordo com os inputs
@@ -178,23 +212,33 @@
 		switch($('#methodSelector option:selected').text()) {
 		    case "Euler":
 		        result = metodoDeEuler(f,h,n, xInit, yInit);
-		        plotXY(result, "Euler");
+		        plotXY(result, "Euler, , H="+ h);
+		        fillTable(result, "Euler", n);
 		        break;
 		     case "Euler Modificado":
 		        result = metodoDeEulerModificado(f,h,n, xInit, yInit);
 		        plotXY(result, "Euler Modificado");
+		        fillTable(result, "Euler Modificado", n);
+
 		        break;
 		     case "Heun / Euler Melhorado":
 		        result = metodoDeHeun(f,h,n, xInit, yInit);
 		        plotXY(result, "Heun");
+		        fillTable(result, "Heun", n);
+
 		        break;
 		     case "Runge-Kutta 4a Ordem":
 		     	result = metodoDeRungeKutta4(f,h,n, xInit, yInit);
 		        plotXY(result, "Rk4");
+		        fillTable(result, "RK4", n);
+
 		        break;
 		    default:
 		        alert("Selecione um Método")
 		}
+			console.table(result[0]);
+	 		console.table(result[1]);
+
 		}catch(exception){
 			alert("Erro: Verifique os Dados");
 			console.log(exception.message);
@@ -204,3 +248,4 @@
 
 	$("#btn").click(executaMetodo);
 	$("#btnClear").click(limparPlotter);
+	$("#btnTable").click(tableToggle);
