@@ -55,7 +55,7 @@
 		//condicao inicial 
 		for (j = 0; j < nx; j++)
 		{
-			solucao[0][j] = f(x, t);
+			solucao[0][j] = u(x);
 			x += dx;
 		}
 
@@ -68,7 +68,7 @@
        
 			for (j = 1; j < nx - 1; j++)
 			{
-				solucao[i + 1][j] = csi * (solucao[i][j + 1] + solucao[i][j - 1]) + (1.0 - 2.0 * csi) * solucao[i][j];
+				solucao[i + 1][j] = csi * (solucao[i][j + 1] + solucao[i][j - 1]) + (1.0 - 2.0 * csi) * solucao[i][j] + f(x,t);
 			}
 		}
 
@@ -88,19 +88,25 @@
 	   }		
 	}		
 	
-	/*funcao f(x,t)*/
-	function f(x, t)
+	/*funcao u(x,0)*/
+	function u(x)
 		{
-		if (t >= 0.1 && t<= 0.3 && x==0.6) 
-			return 5;
-		else
-			return 0;
+		return 50*Math.sin(Math.PI*x)+x;
 		}
 	
 	function gx0(t)
 	   {
 	   return 0.0;
 	   }
+	   
+	//fonte
+	function f(x,t)
+		{
+		if ((x==0.6) && (t>=0.1) && (t<=0.3))
+			return 50;
+		else
+			return 0;
+		}
 	
 function gxfim(t)
    {
