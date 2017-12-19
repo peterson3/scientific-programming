@@ -1,4 +1,4 @@
-	function plotXY(methodResult, nomeMetodo){
+   function plotXY(methodResult, nomeMetodo){
 		let PLOTAREA = document.getElementById('plotArea');
 		Plotly.plot( PLOTAREA, [{
 		x: methodResult[0],
@@ -6,8 +6,8 @@
 		name: nomeMetodo }], {
 		margin: { t: 0 } } );
 
-	 	console.table(methodResult[0]);
-	 	console.table(methodResult[1]);
+	 	//console.table(methodResult[0]);
+	 	//console.table(methodResult[1]);
 	}
 
 	function limparPlotter(methodResult, nomeMetodo){
@@ -15,77 +15,96 @@
 		Plotly.purge(PLOTAREA);
 	}
 
-	function metodoExplicito(){
+	function metodoExplicito(dt, dx){
 		var t, t0, tfim, x, x0, xfim, dt, dx, c, csi;
-		
-		console.log("Método Explícito");
 
-		
-		var solucao = new Array(600);
-		for (var i = 0; i < 600; i++) {
-		  solucao[i] = new Array(50);
-		}
-		
-		
 		//esses valores vão ser setados no html!
 		//ALTERAR DEPOIS
-		dt = 0.001; /* delta tempo */
-		dx = 0.05;   /* delta espaco */
+		//dt = 0.1; /* delta tempo */
+		//dx = 0.2;   /* delta espaco */
 		
 		//intervalo de tempo
-		t0   = 0.0;
-		tfim = 0.5;
+		t0   = 0;
+		tfim = 3;
 
 		//intervalo do espaco
 		x0   = 0.0;
 		xfim = 1.0;
 
-		//numero de intervalor de tempo e espaco
-		nt = ((tfim - t0)/dt) + 2;
-		nx = ((xfim - x0)/dx) + 2;
 
+		//numero de intervalos de tempo e espaco
+		nx = ((xfim - x0)/dx) + 1;
+		nt = ((tfim - t0)/dt) + 1;
+		
+		
+		let solucao = new Array(nt);
+			for (let i = 0; i < solucao.length; i++) {
+		    solucao[i] = new Array(nx);
+			}
+			
+
+		
 		//constante
 		c = 1.0;
 
 		//csi
 		csi = c * dt/(dx*dx);
+	
 		
-		
+		let xs = [];
+		let ys =[];
+		let result2 = [];
+	 	
 		x=x0;
+		xs.push(x);
+		
 		//condicao inicial 
-		for (j = 0; j < nx; j++)
+		for (let j = 0; j < nx; j++)
 		{
 			solucao[0][j] = u(x);
 			x += dx;
+			xs.push(x);
 		}
 
+		result2.push(xs);
+
+		t = t0;
 		//condicao de contorno
-		for (i = 0; i < nt; i++)
+		for (let i = 0; i < nt; i++)
 		{
 			t += dt;
-			solucao[i][0]      = gx0(t);
-			solucao[i][nx - 1] = gxfim(t);
-       
-			for (j = 1; j < nx - 1; j++)
-			{
-				solucao[i + 1][j] = csi * (solucao[i][j + 1] + solucao[i][j - 1]) + (1.0 - 2.0 * csi) * solucao[i][j] + f(x,t);
-			}
+			//console.log(solucao);
+			solucao[i][0]= gx0(t);
+			solucao[i][nx-1] = gxfim(t);
 		}
 
+		t=t0;
+		x=x0;
 
-	var result;
-	
-	
-	for (j = 0; j < nx; j++)
-	   {
-		   console.log("x= " + x);
-		   for (i = 0; i < nt; i++)
-			  {
-			  console.log ("solucao= ", solucao[i][j]);
-			  }
-		  console.log();
-		   x += dx;
-	   }		
+
+		//Preenchendo a meiuca da tabela
+		for (i=1; i<nt; i++){
+			for (j=1; j< nx - 1; j++){
+				x += dx;
+				solucao[i][j] = (csi * solucao[i-1][j-1]) + ((1-(2*csi))* solucao[i-1][j]) + (csi * solucao[i-1][j+1]) + f(x,t); 
+			}
+			t += dt;
+			x = x0;
+		}
+
+		console.table(solucao);
+		
+		//Plotando para cada X
+		for (i=0; i<nt; i++){
+			for (j=0; j<nx; j++){
+	    		 ys.push(solucao[i][j]);
+			}
+			result2.push(ys);
+			plotXY(result2, "");
+			ys = [];		
+		    result2.pop();	 	
+		}
+				
 	}		
 	
 	/*funcao u(x,0)*/
@@ -96,21 +115,30 @@
 	
 	function gx0(t)
 	   {
-	   return 0.0;
+		   return 0;
 	   }
 	   
 	//fonte
 	function f(x,t)
 		{
-		if ((x==0.6) && (t>=0.1) && (t<=0.3))
-			return 50;
-		else
+
+		console.log("X= " + x + " T= " + t);
+		if ((parseFloat(parseFloat(x).toFixed(5)) == 0.6) && (parseFloat(parseFloat(t).toFixed(5)) >= 0.1) && (parseFloat(parseFloat(t).toFixed(5)) <= 0.3))
+			{
+				console.log("retornando 50");
+				return 50;
+			}
+
+
+		else{
+			console.log("retornando 0");
 			return 0;
+		}
 		}
 	
 function gxfim(t)
    {
-   return(100.0);
+   return(1);
    }
 	
 	function funcParser(){
@@ -121,43 +149,7 @@ function gxfim(t)
 		return parser.get('f');
 	}
 
-	function executaMetodo(){
-		//Atualizar f,h e n de acordo com os inputs
-		let f; //Função a ser recuperada pelo parser e ser usada pelo método
-		let h; //Tamanho do Salto (H)
-		let n; //Número de Iterações do Método
-		let result; //Objeto com Resultado dos Méotod (Xs e Ys)
-		let xInit;
-		let yInit;
-
-		
-		f = funcParser();
-		h = Number($('#hArea').val());
-		n = Number($('#stepsArea').val());
-		xInit = Number($('#xInit').val());
-		yInit = Number($('#yInit').val());
-
-		try{
-		//Verificar qual método Selecionado
-		switch($('#methodSelector option:selected').text()) {
-		    case "Explicito":
-		        result = metodoExplicito(t, t0, tfim, x, x0, xfim, dt, dx, c, csi);
-		        plotXY(result, "Explicito");
-		        break;
-		     case "Euler Modificado":
-		        result = metodoDeEulerModificado(f,h,n, xInit, yInit);
-		        plotXY(result, "Euler Modificado");
-		        break;
-		     
-		    default:
-		        alert("Selecione um Método")
-		}
-		}catch(exception){
-			alert("Erro: Verifique os Dados");
-			console.log(exception.message);
-		}
-	}
-
-
-	$("#btn").click(executaMetodo);
-	$("#btnClear").click(limparPlotter);
+$("#btn").on('click', function(){
+	metodoExplicito(Number($('#deltaTArea').val()), Number($('#deltaXArea').val()))
+		});
+$("#btnClear").click(limparPlotter);
